@@ -69,5 +69,7 @@ Au delà de ça, même structure que l'algorithme précédent (avec moins de dir
 
 ## Améliorations possibles et alternatives
 Même que pour le BFS.
-Puisqu'il y a des fonctions communes, j'aurais pu faire un hpp en commun pour les deux algorithmes
+
+Puisqu'il y a des fonctions communes, j'aurais pu faire un hpp en commun pour les deux algorithmes.
+
 Je me demande aussi s'il serait possible d'utiliser des templates.
