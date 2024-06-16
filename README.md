@@ -22,6 +22,8 @@ La boucle s'arrête dès que l'ID diverge de mon index signifiant qu'il a un gap
     Compléter la forme Coplienne
     Faire un ostream d'affichage des packets
     Makefile?
+    Un .hpp
+    Plusieurs fichiers cpp
 
 # Mountain Climbing
 
