@@ -17,8 +17,9 @@ ostream display
     Given a grid of height, return the shortest path from the point with height=0 to the point with height = 27.
     The path can only go to a new cell with an height at most one higher. No diagonals.
 
-Basé sur ça, j'ai déniché des algorithmes de recherche: Je suis tombée sur le BFS (Best First Search).
+Basé sur ça, j'ai déniché des algorithmes de recherche: Je suis tombée sur le **BFS (Best First Search)**.
 J'ai choisi le conteneur queue pour la bonne complexité, je l'ai déclaré en tuple pour à la fois conserver la valeur ainsi que la longueur du chemin.
+
 Durant l'exercice, j'ai codé une simple fonction d'affichage de la grille qui met un X majuscule à la dite position pour débuguer.
 En début de boucle, je prends le premier élément de ma queue (toVisit) et la retire du conteneur. Ensuite je regarde ses voisins (en haut, en bas, à gauche et à droite), les ajoute à ma queue et les marque comme visité.
 Si je tombe sur la cellule end 'E', et que le chemin est le chemin le plus court, alors je le stock dans une variable.
