@@ -18,10 +18,10 @@ La boucle s'arrête dès que l'ID diverge de mon index signifiant qu'il a un gap
     Overflow
 
 ## Améliorations possibles et alternatives
-try, catch, throw
-Compléter la forme Coplienne
-Faire un ostream d'affichage des packets
-Makefile?
+    try, catch, throw
+    Compléter la forme Coplienne
+    Faire un ostream d'affichage des packets
+    Makefile?
 
 # Mountain Climbing
 
@@ -70,4 +70,4 @@ Au delà de ça, même structure que l'algorithme précédent (avec moins de dir
 ## Améliorations possibles et alternatives
 Même que pour le BFS.
 Puisqu'il y a des fonctions communes, j'aurais pu faire un hpp en commun pour les deux algorithmes
-Je me demande aussi s'il serait possible d'utiliser des templates
+Je me demande aussi s'il serait possible d'utiliser des templates.
