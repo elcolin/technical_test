@@ -17,23 +17,6 @@
 
 #define POSITION(row, col, width) ((row) * (width) + (col))
 
-class Grid{
-    private:
-        size_t  &width;
-        size_t  &height;
-        std::vector<int> const &grid;
-        std::vector<bool> visited(width * height, false);
-
-    public:
-        //Coplien form
-        Grid();
-        Grid(std::vector<int> const &grid, std::size_t width, std::size_t height): width(width), height(height), grid(grid)
-        {
-
-        }
-    
-};
-
 int findStart(std::vector<int> const &grid, std::size_t width, std::size_t height)
 {
     for (size_t i = 0; i < width * height; i++)
@@ -41,34 +24,19 @@ int findStart(std::vector<int> const &grid, std::size_t width, std::size_t heigh
         if (grid[i] == 0)
             return i;
     }
-    //send error
     return -1;
-}
-
-void    displayGrid(size_t currentPosition ,std::vector<int> const &grid, std::size_t width, std::size_t height)
-{
-    std::cout << "\n";
-    for (size_t i = 0; i < height; i++)
-    {
-        size_t pos = POSITION(i, 0, width);
-        for (size_t j = 0; j < width; j++)
-        {
-            if (pos + j == currentPosition)
-                std::cout << 'X';
-            else if (grid[pos + j] == 0)
-                std::cout << 'S';
-            else if (grid[pos + j] == 27)
-                std::cout << 'E';
-            else
-                std::cout << (char) (grid[pos + j] + 97 - 1);
-        }
-        std::cout << "\n";
-    }
 }
 
 bool    IsInBoundaries(int position, size_t limit)
 {
     return !(position >= (int)limit || position < 0);
+}
+
+int getNeighbor(int newCol, int newRow, size_t width, size_t height)
+{
+    if (!IsInBoundaries(newCol, width) || !IsInBoundaries(newRow, height))
+        return -1;
+    return (newRow * width + newCol);
 }
 
 void    updateVisits(size_t cellIdx, size_t pathLength, std::queue<std::tuple<int, int>> &toVisit, std::vector<bool> &visited)
@@ -79,49 +47,31 @@ void    updateVisits(size_t cellIdx, size_t pathLength, std::queue<std::tuple<in
 
 int shortestPathLength(std::vector<int> const &grid, std::size_t width, std::size_t height)
 {
-    // Directions matrice to check the neighbors of a cell 
-    int directions[4][2] = {
-        {0,1},
-        {1,0},
-        {-1,0},
-        {0,-1}
-    };
-    int shortestPath = -1;
-    //A queue of cells to visit and their path length
-    std::queue<std::tuple<int, int>> toVisit;
-    //A vector for visited cells
-    std::vector<bool> visited(width * height, false);
+    int                                 shortestPath = -1;
+    int                                 directions[4][2] = { {0,1}, {1,0}, {-1,0}, {0,-1}}; // Pour chaque possibilité de mouvement sans les diagonales
+    std::queue<std::tuple<int, int>>    toVisit; //Les cellules à visiter avec la taille du chemin
+    std::vector<bool>                   visited(width * height, false); // Les cellules visitées
+    auto                                startIdx = findStart(grid, width, height); // Trouver le 'S'
 
-    //Finding the start S
-    auto startIdx = findStart(grid, width, height);
-    if (startIdx < 0)
+    if (startIdx < 0) // Si le S n'existe pas
         return (-1);
-    //sets the cell index to true in visited and pushes it in toVisit
-    updateVisits(startIdx, 0, toVisit, visited);
+    updateVisits(startIdx, 0, toVisit, visited); //Ajoute startIdx dans les deux conteneurs
 
     while(!toVisit.empty())
     {
-        //getting the cell index and pathLength at to front of the queue
         auto [currentIdx, pathLength] = toVisit.front();
-        toVisit.pop();
-        //rows and columns for readibility
+        toVisit.pop(); // On retire la cellule actuelle des cellules à visiter
         size_t row = currentIdx / width;
         size_t col = currentIdx % width;
-        // const auto& dir : directions?
-        for (size_t i = 0; i < 4; i++)
-        {//Travelling through different directions to check neighbors of the current cell --> overflow int fix!
-            int newCol = directions[i][0] + col;
-            int newRow = directions[i][1] + row;
-            if (!IsInBoundaries(newCol, width) || !IsInBoundaries(newRow, height))
-            //Checking if new position is within boundaries
-                continue;
-            int neighborIdx = POSITION(newRow, newCol, width);
-            if (!visited[neighborIdx] && (grid[neighborIdx] <= (grid[currentIdx] + 1)))
-            {//if the cell wasn't visited and value is at most current value + 1
-            
+        for (const auto& dir : directions)
+        {
+            int neighborIdx = getNeighbor(col + dir[0], row + dir[1], width, height); // La position du voisin
+
+            if (neighborIdx > 0 && !visited[neighborIdx] && (grid[neighborIdx] <= (grid[currentIdx] + 1)))
+            {//Si l'index et valide, la cellule jamais visitée et la valeur est tout au plus égale à la valeur + 1
+
                 if (grid[neighborIdx] == 27 && (pathLength + 1 < shortestPath || shortestPath < 0))
-                // If end E found, updating shortest path
-                    shortestPath = pathLength + 1;
+                    shortestPath = pathLength + 1; //Si 'E' est trouvé et que le chemin est plus court
                 updateVisits(neighborIdx, pathLength + 1, toVisit, visited);
             }
         }
@@ -219,3 +169,25 @@ abccccccccccccccaaccaaaaaaaaccaaaaaaaaaaaccccccccccaaaaacccccccccccccccccccccacc
 abccccccccccccccccccccaaaaacccaaaaaaaaaaaacccccccccaacaacccccccccccccccccccccccccccccccccaaaaaa)")),
              422);
 }
+
+
+// void    displayGrid(size_t currentPosition ,std::vector<int> const &grid, std::size_t width, std::size_t height)
+// {
+//     std::cout << "\n";
+//     for (size_t i = 0; i < height; i++)
+//     {
+//         size_t pos = POSITION(i, 0, width);
+//         for (size_t j = 0; j < width; j++)
+//         {
+//             if (pos + j == currentPosition)
+//                 std::cout << 'X';
+//             else if (grid[pos + j] == 0)
+//                 std::cout << 'S';
+//             else if (grid[pos + j] == 27)
+//                 std::cout << 'E';
+//             else
+//                 std::cout << (char) (grid[pos + j] + 97 - 1);
+//         }
+//         std::cout << "\n";
+//     }
+// }

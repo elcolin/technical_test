@@ -4,29 +4,46 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest_proxy.h"
 
+class TCPSequencer
+{
+    public:
+        // Coplien Form
+        TCPSequencer();
+        // TCPSequencer(const TCPSequencer&);
+        // ~TCPSequencer(){};
+        // TCPSequencer &operator=(const TCPSequencer&);
+
+        std::vector<int> receivePacket(int packetId);
+
+    private:
+        int             _expectedPacket;
+        // On choisit set car la valeur est la clé, ce conteneur permet d'obtenir les valeurs dans l'ordre
+        std::set<int>   _receivedPackets;
+};
+
 TCPSequencer::TCPSequencer(): _expectedPacket(0) 
 {
 }
 
 std::vector<int> TCPSequencer::receivePacket(int packetId)
 {
-    // Inserting directly packetId into the received packet set
+    // Insertion du nouveau packet
     this->_receivedPackets.insert(packetId);
 
     std::vector<int>            packetsRes;
     auto                        packetsIter = this->_receivedPackets.begin();
 
     if (_expectedPacket != packetId)
-    // Checking if packetId is different from the expected id, if true returning empty vector
+    // Si ce n'est pas le packet attendu, retour d'un vector vide
         return packetsRes;
 
     while (packetsIter != this->_receivedPackets.end() && packetId == (*packetsIter))
-    {// Incrementing packetId and pushing into the vector until a gap is found or encountering the end of the receivedPackets
+    {// Incrementation sur les packets reçu jusqu'à la présence d'un gap ou fin du set
         packetsRes.push_back(packetId++);
-        // Erasing packet to prevent returning already sent IDs
+        // Suppression du packet du set pour éviter les doublons
         packetsIter = this->_receivedPackets.erase(packetsIter);
     }
-    // Changing the value of the expected packet
+    // Changement de la valeur du prochain packet attendu
     this->_expectedPacket = packetId;
     return packetsRes;
 }
