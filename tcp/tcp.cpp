@@ -8,7 +8,7 @@ class TCPSequencer
 {
     public:
         // Coplien Form
-        TCPSequencer();
+        TCPSequencer():_expectedPacket(0) {};
         // TCPSequencer(const TCPSequencer&);
         // ~TCPSequencer(){};
         // TCPSequencer &operator=(const TCPSequencer&);
@@ -17,34 +17,26 @@ class TCPSequencer
 
     private:
         int             _expectedPacket;
-        // On choisit set car la valeur est la clé, ce conteneur permet d'obtenir les valeurs dans l'ordre
-        std::set<int>   _receivedPackets;
+        std::set<int>   _receivedPackets; // On choisit set car la valeur est la clé, ce conteneur permet d'obtenir les valeurs dans l'ordre
 };
-
-TCPSequencer::TCPSequencer(): _expectedPacket(0) 
-{
-}
 
 std::vector<int> TCPSequencer::receivePacket(int packetId)
 {
     // Insertion du nouveau packet
     this->_receivedPackets.insert(packetId);
 
-    std::vector<int>            packetsRes;
+    std::vector<int>            packetsRes; //Le vecteur de packet a retourner
     auto                        packetsIter = this->_receivedPackets.begin();
 
     if (_expectedPacket != packetId)
-    // Si ce n'est pas le packet attendu, retour d'un vector vide
-        return packetsRes;
+        return packetsRes; // Si ce n'est pas le packet attendu, retour d'un vector vide
 
     while (packetsIter != this->_receivedPackets.end() && packetId == (*packetsIter))
     {// Incrementation sur les packets reçu jusqu'à la présence d'un gap ou fin du set
         packetsRes.push_back(packetId++);
-        // Suppression du packet du set pour éviter les doublons
-        packetsIter = this->_receivedPackets.erase(packetsIter);
+        packetsIter = this->_receivedPackets.erase(packetsIter); // Suppression du packet du set pour éviter les doublons
     }
-    // Changement de la valeur du prochain packet attendu
-    this->_expectedPacket = packetId;
+    this->_expectedPacket = packetId; // Changement de la valeur du prochain packet attendu
     return packetsRes;
 }
 

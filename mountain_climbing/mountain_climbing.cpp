@@ -40,7 +40,7 @@ int getNeighbor(int newCol, int newRow, size_t width, size_t height)
 }
 
 void    updateVisits(size_t cellIdx, size_t pathLength, std::queue<std::tuple<int, int>> &toVisit, std::vector<bool> &visited)
-{
+{// Pousse la cellule dans toVisit pour visiter ses voisins, la marque aussi comme visité
     toVisit.push({cellIdx, pathLength});
     visited[cellIdx] = true;
 }
