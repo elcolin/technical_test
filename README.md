@@ -4,8 +4,11 @@
     Does not return already returned IDs.
 
 Il faut renvoyer les IDs des packets dans l'ordre, j'ai donc recherché un conteneur approprié.
+
 Le conteneur **set** me semble parfait pour l'exercice: La valeur est la clé et il est ordonné.
+
 Il me suffit donc de stocker chaque ID reçu, d'attendre de recevoir la valeur du packet attendu et de me balader linéairement dans mon set tout en poussant dans mon vecteur que je vais renvoyer.
+
 La boucle s'arrête dès que l'ID diverge de mon index signifiant qu'il a un gap et donc un ID non reçu. Elle s'arrête aussi si mon set est vide.
 
 
